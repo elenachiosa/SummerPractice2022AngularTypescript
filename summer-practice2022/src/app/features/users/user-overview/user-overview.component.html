@@ -1,1 +1,23 @@
-<p>user-overview works!</p>
+<!-- Service mock data example -->
+
+<button (click)="addUser()">Add another user</button>
+
+<table>
+  <thead>
+    <tr>
+      <th> id </th>
+      <th> role </th>
+      <th> name </th>
+      <th> avatar </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td> {{user.id}} </td>
+      <td> {{user.role}} </td>
+      <td> {{user.name}} </td>
+      <td> <img src="{{user.avatar}}" /> </td>
+    </tr>
+  </tbody>
+</table>
+
