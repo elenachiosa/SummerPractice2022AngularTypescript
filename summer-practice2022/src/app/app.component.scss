@@ -1,0 +1,14 @@
+.app-content {
+  display: flex;
+  height: 100%;
+
+  app-menu {
+    width: 260px;
+  }
+
+  .page-content {
+    width: 100%;
+    padding: 16px;
+    background-color: #dde3ef;
+  }
+}
