@@ -1,5 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Observable,
+  Subscription,
+  from,
+  of,
+  map,
+  reduce,
+  filter,
+  Subject,
+  ReplaySubject,
+  fromEvent,
+} from 'rxjs';
 
 import { UserService } from 'src/app/core/services';
 import { User } from 'src/app/shared/models';
@@ -15,6 +26,7 @@ export class UserOverviewComponent implements OnInit {
   mockUsers: User[] = [];
 
   users$!: Observable<User[]>;
+  usersOneByOne$!: Observable<User[]>;
   users: User[] = [];
   userDataSubscription: Subscription = Subscription.EMPTY;
   userPostSubscription: Subscription = Subscription.EMPTY;
@@ -28,6 +40,9 @@ export class UserOverviewComponent implements OnInit {
     this.userDataSubscription = this.users$.subscribe((data) => {
       this.users = data;
     });
+
+    this.runOperatorExamples();
+    // this.runSubjectExamples();
   }
 
   ngOnDestroy(): void {
@@ -42,6 +57,7 @@ export class UserOverviewComponent implements OnInit {
       name: 'Ion Ionel',
       avatar:
         'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg',
+      age: 88,
     };
     this.userService.addMockUser(newUser);
   }
@@ -52,6 +68,7 @@ export class UserOverviewComponent implements OnInit {
       avatar:
         'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1021&q=80',
       role: 'admin',
+      age: 99,
     };
 
     this.userPostSubscription = this.userService.addUser(newUser).subscribe({
@@ -65,4 +82,52 @@ export class UserOverviewComponent implements OnInit {
   toggleData(): void {
     this.usesMockData = !this.usesMockData;
   }
+
+  runOperatorExamples(): void {
+    /* from + map */
+    // from(this.mockUsers)
+    //   .pipe(
+    //     map((value) => {
+    //       value.age = value.age + 10;
+    //       return value;
+    //     })
+    //   )
+    //   .subscribe((value) => console.log('Items emitted one by one', value));
+    /* of */
+    // of(this.mockUsers).subscribe((value) => console.log('All items are emitted once', value));
+    /* from + filter */
+    // from(this.mockUsers)
+    //   .pipe(filter(value => value.age % 2 !== 0))
+    //   .subscribe((value) => console.log('Has an odd number for age', value));
+    /* reduce */
+    // from(this.mockUsers)
+    //   .pipe(reduce((total: number, user: User) => total + user.age, 0))
+    //   .subscribe((total: number) => console.log('Total: ', total));
+  }
+
+  runSubjectExamples(): void {
+    const myObservable$ = new Observable((value) => value.next(Math.random()));
+
+    myObservable$.subscribe((value) => console.log(value));
+    myObservable$.subscribe((value) => console.log(value));
+
+    console.log('------------- Subject: ---------------');
+
+    const mySubject$ = new Subject();
+
+    mySubject$.subscribe((value) => console.log(value));
+    mySubject$.subscribe((value) => console.log(value));
+
+    mySubject$.next(Math.random());
+
+    console.log('------------- ReplaySubject: ---------------');
+
+    const mySubject2$ = new ReplaySubject();
+    mySubject2$.next(Math.random());
+
+    mySubject2$.subscribe((value) => console.log(value));
+    mySubject2$.subscribe((value) => console.log(value));
+  }
+
+  /** Filter example rxjs */
 }

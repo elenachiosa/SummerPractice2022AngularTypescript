@@ -38,6 +38,7 @@ table {
 
 button {
   padding: 12px;
+  height: 46px;
   border: none;
   border-radius: 8px;
   background-color: green;
@@ -50,4 +51,12 @@ button {
     background-color: transparent;
     border: 2px solid currentColor;
   }
+
+  &:not(last-of-type) {
+    margin-right: 12px;
+  }
+}
+
+input {
+  padding: 6px;
 }
