@@ -10,7 +10,7 @@ import { User } from 'src/app/shared/models';
   styleUrls: ['./user-overview.component.scss'],
 })
 export class UserOverviewComponent implements OnInit {
-  usesMockData = true;
+  usesMockData = false;
 
   mockUsers: User[] = [];
 
@@ -25,7 +25,6 @@ export class UserOverviewComponent implements OnInit {
     this.mockUsers = this.userService.getMockUsers();
 
     this.users$ = this.userService.getUsers();
-
     this.userDataSubscription = this.users$.subscribe((data) => {
       this.users = data;
     });
@@ -41,13 +40,13 @@ export class UserOverviewComponent implements OnInit {
       id: '0',
       role: 'admin',
       name: 'Ion Ionel',
-      avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg'
-    }
+      avatar:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg',
+    };
     this.userService.addMockUser(newUser);
   }
 
   addUser(): void {
-    /** We pretend newUser is actually relevant data but the API will give us a hardcoded response anyway... */
     let newUser: User = {
       name: 'Gigel Ionel',
       avatar:
@@ -57,16 +56,13 @@ export class UserOverviewComponent implements OnInit {
 
     this.userPostSubscription = this.userService.addUser(newUser).subscribe({
       next: (data: User) => {
-        console.log('✅ Success!', data);
+        console.log('✅ User added!');
         this.users.unshift(data);
-      },
-      error: (error) => {
-        console.error('🔺 Error encountered!', error);
       },
     });
   }
 
   toggleData(): void {
-    this.usesMockData = ! this.usesMockData;
+    this.usesMockData = !this.usesMockData;
   }
 }
