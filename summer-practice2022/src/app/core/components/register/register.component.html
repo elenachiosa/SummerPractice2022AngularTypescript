@@ -1,1 +1,51 @@
-<p>register works!</p>
+<p>Input form with ngModel</p>
+
+<input [(ngModel)]="nameMyModel"
+       name="name"
+       #name="ngModel"
+       required
+       (ngModelChange)="onModelChange($event)">
+
+<span *ngIf="name.invalid && name.errors?.['required'] && name.touched"
+      class="error-message">
+       This input is required
+</span>
+
+<p>ngModelValue: {{nameMyModel}}</p>
+
+---------------------------------------------------------
+
+<p>Register form with reactive forms</p>
+
+<div class="buttons-container">
+       <button (click)="setValueFormGroup()">Set value</button>
+       <button (click)="patchValueFormGroup()">Patch value</button>
+       <button class="reset-button"
+               (click)="resetValues()">Reset form values</button>
+</div>
+
+<form #form="ngForm"
+      [formGroup]="userFormGroup"
+      (ngSubmit)="onSubmitForm(form)">
+       Name <input formControlName="name">
+       <span *ngIf="userFormGroup.controls['name'].errors?.['required'] && userFormGroup.controls['name'].touched && userFormGroup.controls['name'].dirty"
+             class="error-message">This input is required</span>
+       <br />
+       Username <input formControlName="username">
+       <br />
+       Password <input type="password"
+              formControlName="password">
+       <br />
+       <div class="checkbox-container">
+              <input type="checkbox"
+                     formControlName="reminder"> Remind me
+       </div>
+       <br />
+       <button class="submit-button"
+               type="submit"
+               [disabled]="userFormGroup.invalid">Submit</button>
+</form>
+
+<pre>
+Form group values: {{userFormGroup.value | json}}
+</pre>
