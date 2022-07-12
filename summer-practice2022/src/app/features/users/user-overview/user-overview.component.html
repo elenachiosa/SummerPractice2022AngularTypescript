@@ -1,4 +1,10 @@
-<button (click)="addUser()">Add another user</button>
+<button class="toggle"
+        (click)="toggleData()">
+  {{usesMockData ? 'Use API data' : 'Use mock data'}}
+</button>
+
+<br><br>
+<button (click)="usesMockData? addMockUser() : addUser()"> + Add another user</button>
 
 <table>
   <thead>
@@ -10,7 +16,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let user of users">
+    <tr *ngFor="let user of usesMockData ? mockUsers : users">
       <td> {{user.id}} </td>
       <td> {{user.role}} </td>
       <td> {{user.name}} </td>
@@ -18,4 +24,3 @@
     </tr>
   </tbody>
 </table>
-

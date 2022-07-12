@@ -10,7 +10,7 @@ table {
     border-bottom: 1px solid white;
 
     &:nth-of-type(even) {
-      background-color: rgba(255,255,255,0.3);
+      background-color: rgba(255, 255, 255, 0.3);
     }
   }
 
@@ -44,4 +44,10 @@ button {
   color: white;
   font-size: 1em;
   cursor: pointer;
+
+  &.toggle {
+    color: green;
+    background-color: transparent;
+    border: 2px solid currentColor;
+  }
 }

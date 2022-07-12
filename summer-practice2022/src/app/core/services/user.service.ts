@@ -13,14 +13,14 @@ export class UserService {
    * Service with mock data
    */
 
-  // getUsers(): User[] {
-  //   return users;
-  // }
+  getMockUsers(): User[] {
+    return users;
+  }
 
-  // addUser(user: User): void {
-  //   // users.push(user);
-  //   users.unshift(user);
-  // }
+  addMockUser(user: User): void {
+    // users.push(user);
+    users.unshift(user);
+  }
 
   /**
    * Service with real data
