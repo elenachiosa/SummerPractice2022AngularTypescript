@@ -10,7 +10,7 @@ import { RegisterComponent } from './core/components/register/register.component
 
 @NgModule({
   declarations: [AppComponent, RegisterComponent, MenuComponent],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [BrowserModule, AppRoutingModule, UsersModule],
   providers: [],
   bootstrap: [AppComponent],
 })
