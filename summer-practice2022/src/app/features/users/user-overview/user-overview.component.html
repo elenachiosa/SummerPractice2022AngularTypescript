@@ -3,10 +3,13 @@
   {{usesMockData ? 'Use API data' : 'Use mock data'}}
 </button>
 <button (click)="usesMockData? addMockUser() : addUser()"> + Add another user</button>
+<button (click)="usesMockData? removeMockUser() : removeUser()"> x Remove first user</button>
 
-<br><br>
-<input type="text"
-       placeholder="Filter..." />
+<br>
+<input *ngIf="!usesMockData"
+       #filterInput
+       type="text"
+       placeholder="Filter by name..." />
 
 <table>
   <thead>

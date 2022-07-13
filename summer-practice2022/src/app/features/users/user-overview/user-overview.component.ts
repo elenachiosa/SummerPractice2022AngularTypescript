@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   Observable,
   Subscription,
@@ -7,9 +13,11 @@ import {
   map,
   reduce,
   filter,
+  distinctUntilChanged,
   Subject,
   ReplaySubject,
   fromEvent,
+  debounceTime,
 } from 'rxjs';
 
 import { UserService } from 'src/app/core/services';
@@ -20,34 +28,41 @@ import { User } from 'src/app/shared/models';
   templateUrl: './user-overview.component.html',
   styleUrls: ['./user-overview.component.scss'],
 })
-export class UserOverviewComponent implements OnInit {
+export class UserOverviewComponent implements OnInit, AfterViewInit {
   usesMockData = false;
 
   mockUsers: User[] = [];
 
   users$!: Observable<User[]>;
-  usersOneByOne$!: Observable<User[]>;
   users: User[] = [];
+  usersCopy: User[] = [];
   userDataSubscription: Subscription = Subscription.EMPTY;
   userPostSubscription: Subscription = Subscription.EMPTY;
+
+  @ViewChild('filterInput') filterInput!: ElementRef;
 
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.mockUsers = this.userService.getMockUsers();
-
-    this.users$ = this.userService.getUsers();
-    this.userDataSubscription = this.users$.subscribe((data) => {
-      this.users = data;
-    });
-
     this.runOperatorExamples();
     // this.runSubjectExamples();
+
+    this.getMockUsers();
+    this.getUsers();
+  }
+
+  ngAfterViewInit(): void {
+    this.onInputChange();
   }
 
   ngOnDestroy(): void {
     this.userDataSubscription.unsubscribe();
     this.userPostSubscription.unsubscribe();
+  }
+
+  getMockUsers(): void {
+    this.mockUsers = this.userService.getMockUsers();
+    this.users$ = this.userService.getUsers();
   }
 
   addMockUser(): void {
@@ -62,6 +77,17 @@ export class UserOverviewComponent implements OnInit {
     this.userService.addMockUser(newUser);
   }
 
+  removeMockUser(): void {
+    this.userService.removeMockUser('some-id');
+  }
+
+  getUsers(): void {
+    this.userDataSubscription = this.users$.subscribe((data) => {
+      this.users = data;
+      this.usersCopy = data;
+    });
+  }
+
   addUser(): void {
     let newUser: User = {
       name: 'Gigel Ionel',
@@ -73,8 +99,19 @@ export class UserOverviewComponent implements OnInit {
 
     this.userPostSubscription = this.userService.addUser(newUser).subscribe({
       next: (data: User) => {
-        console.log('✅ User added!');
+        console.log('👤➕ User added successfully!');
         this.users.unshift(data);
+      },
+    });
+  }
+
+  removeUser(): void {
+    const userId = this.mockUsers[0].id ? this.mockUsers[0].id : '0';
+
+    this.userPostSubscription = this.userService.removeUser(userId).subscribe({
+      next: () => {
+        console.log('👤➖ User removed successfully!');
+        this.users.shift();
       },
     });
   }
@@ -130,4 +167,26 @@ export class UserOverviewComponent implements OnInit {
   }
 
   /** Filter example rxjs */
+  onInputChange(): void {
+    fromEvent(this.filterInput.nativeElement as HTMLInputElement, 'input')
+      .pipe(
+        map((value) => (value.target as HTMLInputElement).value),
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe((searchTerm: string) => {
+        if (searchTerm) {
+          console.log(searchTerm);
+          this.users = this.filterUsers(searchTerm);
+        } else {
+          this.users = this.usersCopy;
+        }
+      });
+  }
+
+  filterUsers(searchTerm: string): User[] {
+    return this.users.filter((user) =>
+      user.name.toLowerCase().includes(searchTerm)
+    );
+  }
 }

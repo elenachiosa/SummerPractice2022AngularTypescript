@@ -21,12 +21,25 @@ export class UserService {
     users.unshift(user);
   }
 
+  removeMockUser(id: string): void {
+    users.shift();
+  }
+
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.baseUrl + 'users');
+    return this.http.get<User[]>(`${this.baseUrl}users`);
   }
 
   addUser(user: User): Observable<User> {
-    return this.http.post<User>(this.baseUrl + 'user', user).pipe(
+    return this.http.post<User>(`${this.baseUrl}users`, user).pipe(
+      catchError((error: ErrorEvent) => {
+        console.error(error);
+        return throwError(() => new Error('Error occured!'));
+      })
+    );
+  }
+
+  removeUser(id: string): Observable<unknown> {
+    return this.http.delete(`${this.baseUrl}users/${id}`).pipe(
       catchError((error: ErrorEvent) => {
         console.error(error);
         return throwError(() => new Error('Error occured!'));
