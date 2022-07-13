@@ -10,7 +10,7 @@ table {
     border-bottom: 1px solid white;
 
     &:nth-of-type(even) {
-      background-color: rgba(255,255,255,0.3);
+      background-color: rgba(255, 255, 255, 0.3);
     }
   }
 
@@ -38,10 +38,25 @@ table {
 
 button {
   padding: 12px;
+  height: 46px;
   border: none;
   border-radius: 8px;
   background-color: green;
   color: white;
   font-size: 1em;
   cursor: pointer;
+
+  &.toggle {
+    color: green;
+    background-color: transparent;
+    border: 2px solid currentColor;
+  }
+
+  &:not(last-of-type) {
+    margin-right: 12px;
+  }
+}
+
+input {
+  padding: 6px;
 }
