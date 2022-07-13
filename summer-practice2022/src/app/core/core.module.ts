@@ -5,7 +5,7 @@ import { MenuComponent } from './components/menu/menu.component';
 import { RegisterComponent } from './components/register/register.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
-const components = [[MenuComponent, RegisterComponent, PageNotFoundComponent]];
+const components = [MenuComponent, RegisterComponent, PageNotFoundComponent];
 
 @NgModule({
   declarations: components,
