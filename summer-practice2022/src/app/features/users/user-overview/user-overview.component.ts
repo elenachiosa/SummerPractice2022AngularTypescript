@@ -34,7 +34,7 @@ export class UserOverviewComponent implements OnInit {
 
   addMockUser(): void {
     let newUser: User = {
-      id: '0',
+      id: '123456',
       role: 'admin',
       name: 'Ion Ionel',
       avatar:
