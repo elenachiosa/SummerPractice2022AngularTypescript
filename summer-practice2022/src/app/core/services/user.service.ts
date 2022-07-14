@@ -13,6 +13,8 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
+  /** Mock data */
+
   getMockUsers(): User[] {
     return users;
   }
@@ -24,6 +26,8 @@ export class UserService {
   removeMockUser(id: string): void {
     users.shift();
   }
+
+  /** API data */
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.baseUrl}users`);

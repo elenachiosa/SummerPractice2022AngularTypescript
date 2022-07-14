@@ -1,13 +1,8 @@
-<button class="toggle"
-        (click)="toggleData()">
-  {{usesMockData ? 'Use API data' : 'Use mock data'}}
-</button>
-<button (click)="usesMockData? addMockUser() : addUser()"> + Add another user</button>
-<button (click)="usesMockData? removeMockUser() : removeUser()"> x Remove first user</button>
+<button (click)="addMockUser()"> + Add another user</button>
+<button (click)="removeMockUser()"> x Remove first user</button>
 
 <br>
-<input *ngIf="!usesMockData"
-       #filterInput
+<input #filterInput
        type="text"
        placeholder="Filter by name..." />
 
@@ -22,13 +17,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let user of usesMockData ? mockUsers : users">
+    <tr *ngFor="let user of mockUsers">
       <td> {{user.id}} </td>
       <td> {{user.role}} </td>
       <td> {{user.name}} </td>
       <td> <img src="{{user.avatar}}" /> </td>
       <td> {{user.age}} </td>
-
     </tr>
   </tbody>
 </table>

@@ -1,25 +1,5 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import {
-  Observable,
-  Subscription,
-  from,
-  of,
-  map,
-  reduce,
-  filter,
-  distinctUntilChanged,
-  Subject,
-  ReplaySubject,
-  fromEvent,
-  debounceTime,
-} from 'rxjs';
-
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { filter, from, map, Observable, of, ReplaySubject, Subject, debounceTime, distinctUntilChanged, reduce, fromEvent } from 'rxjs';
 import { UserService } from 'src/app/core/services';
 import { User } from 'src/app/shared/models';
 
@@ -28,41 +8,28 @@ import { User } from 'src/app/shared/models';
   templateUrl: './user-overview.component.html',
   styleUrls: ['./user-overview.component.scss'],
 })
-export class UserOverviewComponent implements OnInit, AfterViewInit {
-  usesMockData = false;
-
+export class UserOverviewComponent implements OnInit {
   mockUsers: User[] = [];
-
-  users$!: Observable<User[]>;
-  users: User[] = [];
-  usersCopy: User[] = [];
-  userDataSubscription: Subscription = Subscription.EMPTY;
-  userPostSubscription: Subscription = Subscription.EMPTY;
+  mockUsersCopy: User[] = [];
 
   @ViewChild('filterInput') filterInput!: ElementRef;
 
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.runOperatorExamples();
-    // this.runSubjectExamples();
-
     this.getMockUsers();
-    this.getUsers();
+
+    // this.runOperatorExamples();
+    // this.runSubjectExamples();
   }
 
   ngAfterViewInit(): void {
     this.onInputChange();
   }
 
-  ngOnDestroy(): void {
-    this.userDataSubscription.unsubscribe();
-    this.userPostSubscription.unsubscribe();
-  }
-
   getMockUsers(): void {
     this.mockUsers = this.userService.getMockUsers();
-    this.users$ = this.userService.getUsers();
+    this.mockUsersCopy = this.mockUsers;
   }
 
   addMockUser(): void {
@@ -81,65 +48,26 @@ export class UserOverviewComponent implements OnInit, AfterViewInit {
     this.userService.removeMockUser('some-id');
   }
 
-  getUsers(): void {
-    this.userDataSubscription = this.users$.subscribe((data) => {
-      this.users = data;
-      this.usersCopy = data;
-    });
-  }
-
-  addUser(): void {
-    let newUser: User = {
-      name: 'Gigel Ionel',
-      avatar:
-        'https://images.unsplash.com/photo-1566753323558-f4e0952af115?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1021&q=80',
-      role: 'admin',
-      age: 99,
-    };
-
-    this.userPostSubscription = this.userService.addUser(newUser).subscribe({
-      next: (data: User) => {
-        console.log('👤➕ User added successfully!');
-        this.users.unshift(data);
-      },
-    });
-  }
-
-  removeUser(): void {
-    const userId = this.mockUsers[0].id ? this.mockUsers[0].id : '0';
-
-    this.userPostSubscription = this.userService.removeUser(userId).subscribe({
-      next: () => {
-        console.log('👤➖ User removed successfully!');
-        this.users.shift();
-      },
-    });
-  }
-
-  toggleData(): void {
-    this.usesMockData = !this.usesMockData;
-  }
-
   runOperatorExamples(): void {
     /* from + map */
-    // from(this.mockUsers)
-    //   .pipe(
-    //     map((value) => {
-    //       value.age = value.age + 10;
-    //       return value;
-    //     })
-    //   )
-    //   .subscribe((value) => console.log('Items emitted one by one', value));
+    from(this.mockUsers)
+      .pipe(
+        map((value) => {
+          value.age = value.age + 10;
+          return value;
+        })
+      )
+      .subscribe((value) => console.log('Items emitted one by one', value));
     /* of */
-    // of(this.mockUsers).subscribe((value) => console.log('All items are emitted once', value));
+    of(this.mockUsers).subscribe((value) => console.log('All items are emitted once', value));
     /* from + filter */
-    // from(this.mockUsers)
-    //   .pipe(filter(value => value.age % 2 !== 0))
-    //   .subscribe((value) => console.log('Has an odd number for age', value));
+    from(this.mockUsers)
+      .pipe(filter(value => value.age % 2 !== 0))
+      .subscribe((value) => console.log('Has an odd number for age', value));
     /* reduce */
-    // from(this.mockUsers)
-    //   .pipe(reduce((total: number, user: User) => total + user.age, 0))
-    //   .subscribe((total: number) => console.log('Total: ', total));
+    from(this.mockUsers)
+      .pipe(reduce((total: number, user: User) => total + user.age, 0))
+      .subscribe((total: number) => console.log('Total: ', total));
   }
 
   runSubjectExamples(): void {
@@ -166,6 +94,7 @@ export class UserOverviewComponent implements OnInit, AfterViewInit {
     mySubject2$.subscribe((value) => console.log(value));
   }
 
+  
   /** Filter example rxjs */
   onInputChange(): void {
     fromEvent(this.filterInput.nativeElement as HTMLInputElement, 'input')
@@ -177,16 +106,17 @@ export class UserOverviewComponent implements OnInit, AfterViewInit {
       .subscribe((searchTerm: string) => {
         if (searchTerm) {
           console.log(searchTerm);
-          this.users = this.filterUsers(searchTerm);
+          this.mockUsers = this.filterUsers(searchTerm);
         } else {
-          this.users = this.usersCopy;
+          this.mockUsers = this.mockUsersCopy;
         }
       });
   }
 
   filterUsers(searchTerm: string): User[] {
-    return this.users.filter((user) =>
+    return this.mockUsers.filter((user) =>
       user.name.toLowerCase().includes(searchTerm)
     );
   }
+
 }

@@ -1,1 +1,22 @@
-<p>user-settings works!</p>
+<button (click)="addUser()"> + Add another user</button>
+<button (click)="removeUser()"> x Remove first user</button>
+<table>
+  <thead>
+    <tr>
+      <th> id </th>
+      <th> role </th>
+      <th> name </th>
+      <th> avatar </th>
+      <th> age </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td> {{user.id}} </td>
+      <td> {{user.role}} </td>
+      <td> {{user.name}} </td>
+      <td> <img src="{{user.avatar}}" /> </td>
+      <td> {{user.age}} </td>
+    </tr>
+  </tbody>
+</table>
