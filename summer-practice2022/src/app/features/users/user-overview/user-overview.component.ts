@@ -45,7 +45,8 @@ export class UserOverviewComponent implements OnInit {
   }
 
   removeMockUser(): void {
-    this.userService.removeMockUser('some-id');
+    this.userService.removeMockUser('3');
+    this.getMockUsers();
   }
 
   runOperatorExamples(): void {

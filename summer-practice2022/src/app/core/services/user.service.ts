@@ -9,6 +9,7 @@ import { users } from '../mocks/users-mock';
   providedIn: 'root',
 })
 export class UserService {
+  users = users;
   baseUrl = 'https://174cb5aa-8593-493d-80e3-4fe349ec81c3.mock.pstmn.io/';
 
   constructor(private http: HttpClient) {}
@@ -16,15 +17,17 @@ export class UserService {
   /** Mock data */
 
   getMockUsers(): User[] {
-    return users;
+    return this.users;
   }
 
   addMockUser(user: User): void {
-    users.unshift(user);
+    this.users.unshift(user);
   }
 
   removeMockUser(id: string): void {
-    users.shift();
+    const usersWithoutRemovedUser: User[] = this.users.filter(user => user.id !== id);
+    this.users = usersWithoutRemovedUser;
+    console.log(usersWithoutRemovedUser);
   }
 
   /** API data */
