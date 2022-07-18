@@ -1,5 +1,17 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { filter, from, map, Observable, of, ReplaySubject, Subject, debounceTime, distinctUntilChanged, reduce, fromEvent } from 'rxjs';
+import {
+  filter,
+  from,
+  map,
+  Observable,
+  of,
+  ReplaySubject,
+  Subject,
+  debounceTime,
+  distinctUntilChanged,
+  reduce,
+  fromEvent,
+} from 'rxjs';
 import { UserService } from 'src/app/core/services';
 import { User } from 'src/app/shared/models';
 
@@ -60,10 +72,12 @@ export class UserOverviewComponent implements OnInit {
       )
       .subscribe((value) => console.log('Items emitted one by one', value));
     /* of */
-    of(this.mockUsers).subscribe((value) => console.log('All items are emitted once', value));
+    of(this.mockUsers).subscribe((value) =>
+      console.log('All items are emitted once', value)
+    );
     /* from + filter */
     from(this.mockUsers)
-      .pipe(filter(value => value.age % 2 !== 0))
+      .pipe(filter((value) => value.age % 2 !== 0))
       .subscribe((value) => console.log('Has an odd number for age', value));
     /* reduce */
     from(this.mockUsers)
@@ -95,7 +109,6 @@ export class UserOverviewComponent implements OnInit {
     mySubject2$.subscribe((value) => console.log(value));
   }
 
-  
   /** Filter example rxjs */
   onInputChange(): void {
     fromEvent(this.filterInput.nativeElement as HTMLInputElement, 'input')
@@ -120,4 +133,19 @@ export class UserOverviewComponent implements OnInit {
     );
   }
 
+  sortMockUsers(column: string): void {
+    if (column === 'age') {
+      this.mockUsers.sort(
+        (firstUser: User, secondUser: User) => firstUser.age - secondUser.age
+      );
+    } else {
+      this.mockUsers.sort((firstUser: User, secondUser: User) =>
+        String(firstUser[column as keyof User])
+          .toLocaleLowerCase()
+          .localeCompare(
+            String(secondUser[column as keyof User]).toLocaleLowerCase()
+          )
+      );
+    }
+  }
 }
